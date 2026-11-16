@@ -6,12 +6,12 @@ public class Game {
 	public static final double RADIUS = 0.2;
 	public static final double SPEED = 2.5;
 	public static final double TURN_SPEED = 2.5;
-	private static final double MAX_DT = 0.1;
+	public static final double MAX_DT = 0.1;
 	
 	private final Maze maze;
 	private final Random random;
 	private final Map<String, Player> players = new LinkedHashMap<>();
-	private String winnerId = "";
+	private String winnerId = null;
 	
 	public Game(Maze maze, Random random) {
 		this.maze = maze;
