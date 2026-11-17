@@ -144,7 +144,7 @@ public class ClientApp {
 		int row = (int) rSpinner.getValue();
 		int column = (int) cSpinner.getValue();
 		
-		Maze maze = MazeGenerator.generateMaze(row, column, new Random());
+		Maze maze = MazeGenerator.generateMaze(column, row, new Random());
 		Game game = new Game(maze, new Random());
 		Player player = game.addPlayer("local");
 		GameWindow window = new GameWindow(game, player);
@@ -152,8 +152,11 @@ public class ClientApp {
 			@Override
 			public void windowClosed(WindowEvent e) {
 				frmMazed.setVisible(true);
+				
 			}
 		});
+		
+		frmMazed.setVisible(false);
 		window.setVisible(true);
 	}
 }

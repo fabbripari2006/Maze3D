@@ -10,7 +10,7 @@ import it.unibs.pajc.maze.model.*;
 public class GameWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private GamePanel panel;
+	private final GamePanel panel;
 
 	public GameWindow(Game game, Player player) {
 		super("Maze3D");
@@ -20,6 +20,10 @@ public class GameWindow extends JFrame {
 			@Override
 			public void windowDeactivated(WindowEvent e) {
 				panel.releaseKeys();
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
 				panel.stop();
 			}
 		});
