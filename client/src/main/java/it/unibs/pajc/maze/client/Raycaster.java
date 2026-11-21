@@ -132,18 +132,50 @@ public class Raycaster {
 			zBuffer[x] = hit.distance();
 		}
 		
+		drawTreasure(g, player, zBuffer, 400, 300, projection);
 		
 		g.dispose();
 	}
 
 	private Color wallColor(RayHit hit) {
 		Color base = (hit.face() == Direction.NORTH || hit.face() == Direction.SOUTH) ? WALL_NS : WALL_EW;
-		double alpha = Math.max(0.2, 1 - hit.distance() * 0.11);
+		Color wallColor = calculateColorWithDistance(hit.distance(), base);
+		return wallColor;
+	}
+
+	private Color calculateColorWithDistance(double distance, Color base) {
+		double alpha = Math.max(0.2, 1 - distance * 0.11);
 		int red = (int) (base.getRed() * alpha);
 		int green = (int) (base.getGreen() * alpha);
 		int blue = (int) (base.getBlue() * alpha);
 		
-		Color wallColor = new Color(red, green, blue);
-		return wallColor;
+		Color color = new Color(red, green, blue);
+		return color;
 	}
+	
+	private void drawTreasure(Graphics2D g, Player player, double [] zBuffer, int width, int height, double projection) {
+		double dx = player.getTreasureX() + 0.5 - player.getX();
+		double dy = player.getTreasureY() + 0.5 - player.getY();
+		
+		double depth = dx * player.getDirX() + dy * player.getDirY();
+		if(depth<0.1) return;
+		
+		g.setColor(calculateColorWithDistance(depth, new Color(255, 215, 0)));
+		
+		double lateral = -dx * player.getDirY() + dy * player.getDirX();
+		
+		double cameraX = lateral / (depth * TAN_FOV);
+		double screenX = (width / 2.0) * (1 + cameraX);
+		
+		double wallHeight = projection / depth;
+		double size = wallHeight * 0.4;
+		double bottom = height / 2.0 + wallHeight / 2;
+		double top = bottom - size;
+		
+		for (int x = (int) (screenX - size/2); x < screenX + size/2; x++) {
+			if (x<0 || x>=width || depth>=zBuffer[x]) continue;
+			
+			g.fillRect(x, (int) top, 1, (int) size);
+		}
+	};
 }
